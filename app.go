@@ -39,7 +39,7 @@ func NewAppWithCfg(c *Cfg) *App {
 		Sessions:  &Sessions{},
 	}
 
-	if c.useTmpl {
+	if c.UseTmpl {
 		app.Tmpl.Load()
 	}
 	app.Server = &http.Server{

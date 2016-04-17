@@ -6,5 +6,5 @@ type Cfg struct {
 	CertFile   string
 	KeyFile    string
 	ServeFiles []string
-	useTmpl    bool
+	UseTmpl    bool
 }
