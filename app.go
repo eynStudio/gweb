@@ -3,6 +3,7 @@ package gweb
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"time"
 
@@ -52,17 +53,30 @@ func NewAppWithCfg(c *Cfg) *App {
 	return app
 }
 
-func (P *App) Start() {
-	if P.Cfg.Tls {
-		err := P.Server.ListenAndServeTLS(P.Cfg.CertFile, P.Cfg.KeyFile)
+func (p *App) Start() {
+	p.injectNodes(p.Root)
+
+	if p.Cfg.Tls {
+		err := p.Server.ListenAndServeTLS(p.Cfg.CertFile, p.Cfg.KeyFile)
 		if err != nil {
 			panic(err)
 		}
 	} else {
-		err := P.Server.ListenAndServe()
+		err := p.Server.ListenAndServe()
 		if err != nil {
 			panic(err)
 		}
+	}
+}
+
+func (p *App) injectNodes(n INode) {
+	p.Apply(n)
+	log.Printf("xxxxxxxxxxxxxxxxxxx,%#v", n)
+
+	nodes := n.GetNodes()
+	for i, l := 0, len(nodes); i < l; i++ {
+		//		p.Apply(&nodes[i])
+		p.injectNodes(nodes[i])
 	}
 }
 
