@@ -71,11 +71,8 @@ func (p *App) Start() {
 
 func (p *App) injectNodes(n INode) {
 	p.Apply(n)
-	log.Printf("xxxxxxxxxxxxxxxxxxx,%#v", n)
-
 	nodes := n.GetNodes()
 	for i, l := 0, len(nodes); i < l; i++ {
-		//		p.Apply(&nodes[i])
 		p.injectNodes(nodes[i])
 	}
 }
