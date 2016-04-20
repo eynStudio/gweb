@@ -3,7 +3,6 @@ package gweb
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"time"
 
