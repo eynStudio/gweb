@@ -9,6 +9,13 @@ import (
 	. "github.com/eynstudio/gobreak"
 )
 
+const (
+	GET  = "GET"
+	POST = "POST"
+	PUT  = "PUT"
+	DEL  = "DELETE"
+)
+
 type Req struct {
 	*http.Request
 	*urlParts
