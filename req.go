@@ -19,25 +19,28 @@ const (
 type Req struct {
 	*http.Request
 	*urlParts
-	UserId string
+	Token string
 }
 
 func NewReq(r *http.Request) *Req {
 	rr := &Req{Request: r}
-	rr.parseUserId()
+	rr.parseToken()
 	rr.urlParts = newUrlParts(rr.Url())
 	return rr
 }
 
-func (p *Req) parseUserId() {
-	jbreak := p.Header.Get("Authorization")
-	if jbreak != "" {
-		p.UserId = strings.Split(jbreak, " ")[1]
+func (p *Req) parseToken() {
+	if authHeader := p.Header.Get("Authorization"); authHeader == "" {
+		return
+	} else if tokens := strings.Split(authHeader, " "); len(tokens) != 2 {
+		return
+	} else {
+		p.Token = tokens[1]
 	}
 }
 
 func (p *Req) Url() string     { return p.URL.Path }
-func (p *Req) hasUserId() bool { return len(p.UserId) > 0 }
+func (p *Req) hasToken() bool  { return len(p.Token) > 0 }
 func (p *Req) JMethod() string { return p.Header.Get("jBreak-Method") }
 
 func (p *Req) JsonBody(m T) bool {

@@ -19,7 +19,7 @@ type App struct {
 	Server *http.Server
 	*Router
 	*Tmpl
-	*Sessions
+	ISessions
 }
 
 func NewApp(name string) *App {
@@ -36,7 +36,6 @@ func NewAppWithCfg(c *Cfg) *App {
 		Cfg:       c,
 		Router:    &Router{},
 		Tmpl:      &Tmpl{},
-		Sessions:  &Sessions{},
 	}
 
 	if c.UseTmpl {

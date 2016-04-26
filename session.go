@@ -1,10 +1,5 @@
 package gweb
 
-import (
-	. "github.com/eynstudio/gobreak"
-)
-
-type ISession interface {
+type ISessions interface {
+	HasSession(sid string) bool
 }
-
-type Sessions map[GUID]ISession
