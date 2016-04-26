@@ -19,7 +19,7 @@ type App struct {
 	Server *http.Server
 	*Router
 	*Tmpl
-	ISessions
+	Sessions ISessions
 }
 
 func NewApp(name string) *App {
