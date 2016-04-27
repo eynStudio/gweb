@@ -40,7 +40,7 @@ func (p *Req) parseToken() {
 }
 
 func (p *Req) Url() string     { return p.URL.Path }
-func (p *Req) hasToken() bool  { return len(p.Token) > 0 }
+func (p *Req) HasToken() bool  { return len(p.Token) > 0 }
 func (p *Req) JMethod() string { return p.Header.Get("jBreak-Method") }
 
 func (p *Req) JsonBody(m T) bool {
