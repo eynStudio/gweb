@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	. "github.com/eynstudio/gobreak"
+	"github.com/eynstudio/gobreak/dddd/cmdbus"
+	"github.com/eynstudio/gobreak/dddd/ddd"
 	"github.com/eynstudio/gobreak/di"
 )
 
@@ -70,4 +72,8 @@ func (p *Ctx) ServeFile() bool {
 		}
 	}
 	return false
+}
+
+func (p *Ctx) Exec(cmd ddd.Cmd) error {
+	return cmdbus.Exec(cmd)
 }
