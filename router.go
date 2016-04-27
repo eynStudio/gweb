@@ -14,13 +14,13 @@ func (p *Router) Route(n INode, c *Ctx) {
 	}
 
 	if !c.Handled {
-		n.Handler(c)
+		n.Handle(c)
 	}
 }
 
 func (p *Router) RouteSubNodes(n INode, c *Ctx) {
 	for _, it := range n.GetNodes() {
-		if it.CanRouter(c.NextPart().path) {
+		if it.CanRoute(c.NextPart().path) {
 			if it.NeedAuth() {
 				if !c.HasToken() || !c.Sessions.HasSession(c.Token) {
 					c.Forbidden()
