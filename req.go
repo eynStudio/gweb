@@ -48,7 +48,9 @@ func (p *Req) JsonBody(m T) bool {
 		defer p.Body.Close()
 		if err := json.NewDecoder(p.Body).Decode(&m); err != nil {
 			log.Println(err)
+			return false
 		}
+		return true
 	}
 	return false
 }
