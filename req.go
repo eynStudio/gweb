@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	. "github.com/eynstudio/gobreak"
+	"github.com/eynstudio/gobreak/db/filter"
 )
 
 const (
@@ -42,6 +43,15 @@ func (p *Req) parseToken() {
 func (p *Req) Url() string     { return p.URL.Path }
 func (p *Req) HasToken() bool  { return len(p.Token) > 0 }
 func (p *Req) JMethod() string { return p.Header.Get("jBreak-Method") }
+func (p *Req) IsJPage() bool   { return p.JMethod() == "Page" }
+func (p *Req) IsJList() bool   { return p.JMethod() == "List" }
+func (p *Req) JPage() *filter.PageFilter {
+	var pf filter.PageFilter
+	if p.IsJsonContent() && p.IsJPage() && p.JsonBody(&pf) {
+		return &pf
+	}
+	return nil
+}
 
 func (p *Req) JsonBody(m T) bool {
 	if p.IsJsonContent() && p.Body != nil {
