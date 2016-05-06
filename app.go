@@ -20,6 +20,7 @@ type App struct {
 	*Router
 	*Tmpl
 	Sessions ISessions
+	*Log
 }
 
 func NewApp(name string) *App {
@@ -34,6 +35,7 @@ func NewAppWithCfg(c *Cfg) *App {
 		Container: di.Root,
 		Name:      "",
 		Cfg:       c,
+		Log:       NewLog("./logs/serv"),
 		Router:    &Router{},
 		Tmpl:      &Tmpl{},
 	}
@@ -95,6 +97,7 @@ func (p *App) handler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	p.Log.Log(ctx.Req)
 	if w, ok := ctx.Resp.ResponseWriter.(io.Closer); ok {
 		w.Close()
 	}
