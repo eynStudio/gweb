@@ -10,7 +10,7 @@ type ISession interface {
 }
 
 type ISessions interface {
-	HasSession(sid string) bool
-	DelSession(sid string) bool
+	HasSession(sid string) (bool, error)
+	DelSession(sid string) error
 	GetSession(sid string) (ISession, error)
 }
