@@ -6,7 +6,7 @@ import (
 
 type ISession interface {
 	ID() string
-	Uid() GUID
+	UserId() GUID
 }
 
 type ISessions interface {

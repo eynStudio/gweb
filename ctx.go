@@ -22,6 +22,7 @@ type Ctx struct {
 	isErr   bool
 	afters  []Handler
 	Handled bool
+	session ISession
 }
 
 func (p *Ctx) Error(code int) *Ctx {
@@ -74,6 +75,12 @@ func (p *Ctx) ServeFile() bool {
 	return false
 }
 
-func (p *Ctx) Exec(cmd ddd.Cmd) error {
-	return cmdbus.Exec(cmd)
+func (p *Ctx) Session() ISession {
+	if p.session == nil {
+		p.session, _ = p.Sessions.GetSession(p.Token)
+	}
+	return p.session
 }
+func (p Ctx) HasSession() bool        { return p.Session() != nil }
+func (p *Ctx) UserId() GUID           { return p.Session().UserId() }
+func (p *Ctx) Exec(cmd ddd.Cmd) error { return cmdbus.Exec(cmd) }
