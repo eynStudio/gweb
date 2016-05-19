@@ -22,8 +22,12 @@ func (p *Router) RouteSubNodes(n INode, c *Ctx) {
 	for _, it := range n.GetNodes() {
 		if it.CanRoute(c.NextPart().path) {
 			if it.NeedAuth() {
-				if !c.HasToken() || !c.HasSession() {
-					c.Forbidden()
+				if !c.HasToken() {
+					c.NeedAuth(c)
+					break
+				}
+				if !c.HasSession() {
+					c.SessionExpired(c)
 					break
 				}
 			}

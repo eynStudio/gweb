@@ -35,11 +35,15 @@ func (p *Ctx) Set(k string, v T)   { p.Scope[k] = v }
 func (p *Ctx) IsErr() bool         { return p.isErr }
 func (p *Ctx) Get(k string) string { return p.Scope.GetStr(k) }
 
+func (p *Ctx) SetHandled()         { p.Handled = true }
 func (p *Ctx) OK()                 { p.WriteHeader(http.StatusOK) }
 func (p *Ctx) NotFound()           { p.Error(http.StatusNotFound) }
 func (p *Ctx) Forbidden()          { p.Error(http.StatusForbidden) }
 func (p *Ctx) Redirect(url string) { http.Redirect(p.Resp, p.Request, url, http.StatusFound) }
-
+func (p *Ctx) HandleStatusJson(s Status) {
+	p.Json(s)
+	p.Handled = true
+}
 func (p *Ctx) Json(m T) {
 	if p.IsErr() {
 		return

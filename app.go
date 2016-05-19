@@ -21,6 +21,8 @@ type App struct {
 	*Tmpl
 	Sessions ISessions
 	*Log
+	NeedAuth       func(*Ctx)
+	SessionExpired func(*Ctx)
 }
 
 func NewApp(name string) *App {
