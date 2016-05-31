@@ -44,6 +44,7 @@ func (p *Ctx) HandleStatusJson(s Status) {
 	p.Json(s)
 	p.Handled = true
 }
+
 func (p *Ctx) Json(m T) {
 	if p.IsErr() {
 		return
@@ -55,6 +56,8 @@ func (p *Ctx) Json(m T) {
 		p.Resp.Write(b)
 	}
 }
+
+func (p *Ctx) SetCookie(c http.Cookie) { http.SetCookie(p.Resp, &c) }
 
 func (p *Ctx) Tmpl(tpl string, o T) {
 	p.Resp.Header().Set("Content-Type", "text/html; charset=utf-8")
