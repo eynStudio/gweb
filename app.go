@@ -23,6 +23,7 @@ type App struct {
 	*Log
 	NeedAuth       func(*Ctx)
 	SessionExpired func(*Ctx)
+	NotFoundHandle func(*Ctx)
 }
 
 func NewApp(name string) *App {
@@ -95,7 +96,11 @@ func (p *App) handler(w http.ResponseWriter, r *http.Request) {
 	if !ctx.ServeFile() {
 		p.Route(p.Root, ctx)
 		if !ctx.Handled {
-			ctx.NotFound()
+			if p.NotFoundHandle != nil {
+				p.NotFoundHandle(ctx)
+			} else {
+				ctx.NotFound()
+			}
 		}
 	}
 
