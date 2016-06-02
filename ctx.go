@@ -35,6 +35,11 @@ func (p *Ctx) Set(k string, v T)   { p.Scope[k] = v }
 func (p *Ctx) IsErr() bool         { return p.isErr }
 func (p *Ctx) Get(k string) string { return p.Scope.GetStr(k) }
 
+func (p *Ctx) IsGET() bool  { return p.Method == GET }
+func (p *Ctx) IsPOST() bool { return p.Method == POST }
+func (p *Ctx) IsPUT() bool  { return p.Method == PUT }
+func (p *Ctx) IsDEL() bool  { return p.Method == DEL }
+
 func (p *Ctx) SetHandled()         { p.Handled = true }
 func (p *Ctx) OK()                 { p.WriteHeader(http.StatusOK) }
 func (p *Ctx) NotFound()           { p.Error(http.StatusNotFound) }
