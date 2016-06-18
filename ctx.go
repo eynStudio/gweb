@@ -8,8 +8,6 @@ import (
 	"strings"
 
 	. "github.com/eynstudio/gobreak"
-	"github.com/eynstudio/gobreak/dddd/cmdbus"
-	"github.com/eynstudio/gobreak/dddd/ddd"
 	"github.com/eynstudio/gobreak/di"
 )
 
@@ -93,6 +91,5 @@ func (p *Ctx) Session() ISession {
 	}
 	return p.session
 }
-func (p Ctx) HasSession() bool        { return p.Session() != nil }
-func (p *Ctx) UserId() GUID           { return p.Session().UserId() }
-func (p *Ctx) Exec(cmd ddd.Cmd) error { return cmdbus.Exec(cmd) }
+func (p Ctx) HasSession() bool { return p.Session() != nil }
+func (p *Ctx) UserId() GUID    { return p.Session().UserId() }
