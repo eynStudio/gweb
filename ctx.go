@@ -93,3 +93,9 @@ func (p *Ctx) Session() ISession {
 }
 func (p Ctx) HasSession() bool { return p.Session() != nil }
 func (p *Ctx) UserId() GUID    { return p.Session().UserId() }
+func (p *Ctx) UserIdOr() GUID {
+	if p.HasToken() {
+		return p.Session().UserId()
+	}
+	return GUID("")
+}
