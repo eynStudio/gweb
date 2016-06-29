@@ -60,6 +60,19 @@ func (p *Ctx) Json(m T) {
 	}
 }
 
+func (p *Ctx) Text(str string) {
+	if p.IsErr() {
+		return
+	}
+	p.Resp.Write([]byte(str))
+	//	if b, err := json.Marshal(m); err != nil {
+	//		p.Error(http.StatusInternalServerError)
+	//	} else {
+	//		p.Resp.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//		p.Resp.Write(b)
+	//	}
+}
+
 func (p *Ctx) SetCookie(c http.Cookie) { http.SetCookie(p.Resp, &c) }
 
 func (p *Ctx) Tmpl(tpl string, o T) {
