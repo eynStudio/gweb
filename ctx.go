@@ -20,7 +20,7 @@ type Ctx struct {
 	isErr   bool
 	afters  []Handler
 	Handled bool
-	session ISession
+	Uid     GUID
 }
 
 func (p *Ctx) Error(code int) *Ctx {
@@ -65,12 +65,6 @@ func (p *Ctx) Text(str string) {
 		return
 	}
 	p.Resp.Write([]byte(str))
-	//	if b, err := json.Marshal(m); err != nil {
-	//		p.Error(http.StatusInternalServerError)
-	//	} else {
-	//		p.Resp.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//		p.Resp.Write(b)
-	//	}
 }
 
 func (p *Ctx) SetCookie(c http.Cookie) { http.SetCookie(p.Resp, &c) }
@@ -98,17 +92,18 @@ func (p *Ctx) ServeFile() bool {
 	return false
 }
 
-func (p *Ctx) Session() ISession {
-	if p.session == nil {
-		p.session, _ = p.Sessions.GetSession(p.Token)
-	}
-	return p.session
+func (p Ctx) IsAuth() bool {
+	return !p.Uid.IsEmpty()
 }
-func (p Ctx) HasSession() bool { return p.Session() != nil }
-func (p *Ctx) UserId() GUID    { return p.Session().UserId() }
-func (p *Ctx) UserIdOr() GUID {
-	if p.HasToken() {
-		return p.Session().UserId()
+
+func (p *Ctx) UserId() GUID {
+	if !p.HasToken() {
+		return GUID("")
 	}
-	return GUID("")
+	if p.Uid != "" {
+		return p.Uid
+	}
+	uid, _ := p.Sessions.GetSessUid(p.Token)
+	p.Uid = GUID(uid)
+	return p.Uid
 }

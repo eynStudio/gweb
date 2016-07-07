@@ -21,8 +21,7 @@ type App struct {
 	*Tmpl
 	Sessions ISessions
 	*Log
-	NeedAuth       func(*Ctx)
-	SessionExpired func(*Ctx)
+	ValidAuth      func(*Ctx) Status
 	NotFoundHandle func(*Ctx)
 }
 
