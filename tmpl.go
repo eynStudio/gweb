@@ -9,8 +9,12 @@ type Tmpl struct {
 	Templates *template.Template
 }
 
+func html(v string) template.HTML { return template.HTML(v) }
+
 func (p *Tmpl) Load() {
-	p.Templates = template.Must(template.New("").Delims("[[", "]]").ParseGlob("views/*.*"))
+	p.Templates = template.Must(template.New("").Funcs(template.FuncMap{
+		"html": html,
+	}).Delims("[[", "]]").ParseGlob("views/*.*"))
 }
 
 func (p *Tmpl) Execute(wr io.Writer, name string, data interface{}) error {
