@@ -5,7 +5,7 @@ type INode interface {
 	NewParamNode(path string, auth bool) INode
 	NewRegexNode(path, regex string, auth bool) INode
 	NewHandleNode(path string, handle func(*Ctx), auth bool) INode
-	CanRoute(test string) bool
+	CanRoute(test string, c *Ctx) bool
 	Handle(c *Ctx)
 	RunInterceptors(c *Ctx) INode
 	GetNodes() []INode
@@ -50,10 +50,10 @@ func (p *Node) addNode(n INode) INode {
 	return n
 }
 
-func (p *Node) Handle(c *Ctx)             {}
-func (p *Node) GetNodes() []INode         { return p.Nodes }
-func (p *Node) NeedAuth() bool            { return p.needAuth }
-func (p *Node) CanRoute(test string) bool { return p.Path == test }
+func (p *Node) Handle(c *Ctx)                     {}
+func (p *Node) GetNodes() []INode                 { return p.Nodes }
+func (p *Node) NeedAuth() bool                    { return p.needAuth }
+func (p *Node) CanRoute(test string, c *Ctx) bool { return p.Path == test }
 
 func (p *Node) Interceptor(m *Interceptor) *Node {
 	p.Interceptors = append(p.Interceptors, m)

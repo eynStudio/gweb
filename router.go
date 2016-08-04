@@ -20,7 +20,7 @@ func (p *Router) Route(n INode, c *Ctx) {
 
 func (p *Router) RouteSubNodes(n INode, c *Ctx) {
 	for _, it := range n.GetNodes() {
-		if it.CanRoute(c.NextPart().path) {
+		if it.CanRoute(c.NextPart().path, c) {
 			if it.NeedAuth() {
 				if s := c.ValidAuth(c); s.IsErr() {
 					c.HandleStatusJson(s)
