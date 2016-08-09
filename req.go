@@ -31,12 +31,14 @@ func NewReq(r *http.Request) *Req {
 }
 
 func (p *Req) parseToken() {
-	if authHeader := p.Header.Get("Authorization"); authHeader == "" {
+	if authHeader := p.Header.Get("Authorization"); authHeader != "" {
+		if tokens := strings.Split(authHeader, " "); len(tokens) == 2 {
+			p.Token = tokens[1]
+		}
 		return
-	} else if tokens := strings.Split(authHeader, " "); len(tokens) != 2 {
-		return
-	} else {
-		p.Token = tokens[1]
+	}
+	if t := p.URL.Query().Get("token"); t != "" {
+		p.Token = t
 	}
 }
 
