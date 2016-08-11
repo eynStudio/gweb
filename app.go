@@ -3,6 +3,7 @@ package gweb
 import (
 	"fmt"
 	"io"
+	"mime"
 	"net/http"
 	"time"
 
@@ -10,6 +11,10 @@ import (
 	"github.com/eynstudio/gobreak/conf"
 	"github.com/eynstudio/gobreak/di"
 )
+
+func init() {
+	mime.AddExtensionType(".apk", "application/vnd.android.package-archive")
+}
 
 type App struct {
 	Root INode
