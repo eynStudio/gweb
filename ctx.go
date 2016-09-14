@@ -5,11 +5,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
 	"strings"
 
 	. "github.com/eynstudio/gobreak"
 	"github.com/eynstudio/gobreak/di"
 )
+
+var ctxType = reflect.TypeOf(&Ctx{})
 
 type Ctx struct {
 	*App
