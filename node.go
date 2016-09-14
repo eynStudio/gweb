@@ -34,9 +34,6 @@ type Node struct {
 
 func NewNode(path string, auth bool) (pn *Node) {
 	paths := strings.Split(path, "/")
-	if len(paths) == 1 {
-		return newNode(path, auth)
-	}
 	var cn INode
 	for i, it := range paths {
 		if i == 0 {
@@ -46,14 +43,7 @@ func NewNode(path string, auth bool) (pn *Node) {
 			cn = cn.NewParamNode(it, auth)
 		}
 	}
-	//	n := &Node{
-	//		Path:         path,
-	//		Interceptors: []*Interceptor{},
-	//		Nodes:        []INode{},
-	//		needAuth:     auth,
-	//		actions:      make(map[string]nodeAction),
-	//	}
-	return pn
+	return
 }
 
 func newNode(path string, auth bool) *Node {
