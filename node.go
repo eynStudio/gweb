@@ -9,6 +9,7 @@ type INode interface {
 	AddNode(n INode) INode
 	NewParamNode(path string, auth bool) INode
 	NewRegexNode(path, regex string, auth bool) INode
+	NewSubNode(path string, auth bool) INode
 	NewHandleNode(path string, handle func(*Ctx), auth bool) INode
 	CanRoute(test string, c *Ctx) bool
 	Handle(c *Ctx)
@@ -39,8 +40,10 @@ func NewNode(path string, auth bool) (pn *Node) {
 		if i == 0 {
 			pn = newNode(it, auth)
 			cn = pn
+		} else if strings.HasPrefix(it, "{") && strings.HasSuffix(it, "}") {
+			cn = cn.NewParamNode(strings.Trim(it, "{}"), auth)
 		} else {
-			cn = cn.NewParamNode(it, auth)
+			cn = cn.NewSubNode(it, auth)
 		}
 	}
 	return
@@ -55,6 +58,11 @@ func newNode(path string, auth bool) *Node {
 		actions:      make(map[string]nodeAction),
 	}
 }
+
+func (p *Node) NewSubNode(path string, auth bool) INode {
+	return p.addNode(newNode(path, auth))
+}
+
 func (p *Node) NewParamNode(path string, auth bool) INode {
 	return p.addNode(NewParamNode(path, auth))
 }
