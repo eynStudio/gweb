@@ -1,6 +1,8 @@
 package gweb
 
 import (
+	"encoding/json"
+	"log"
 	"reflect"
 	"strings"
 )
@@ -26,18 +28,38 @@ func (p *Router) Route(n INode, c *Ctx) {
 	}
 }
 
+func GetFuncArgs(t reflect.Type) []reflect.Type {
+	l := t.NumIn()
+	in := make([]reflect.Type, l)
+	for i := 0; i < l; i++ {
+		in[i] = t.In(i)
+	}
+	return in
+}
+
 func (p *Router) autoHandle(n INode, c *Ctx) bool {
-	in := []reflect.Value{reflect.ValueOf(c)}
 	actions := p.findActions(c)
 	for _, it := range actions {
-		if m, ok := n.Actions()[it]; ok {
+		if act, ok := n.Actions()[it]; ok {
 			c.Handled = true
-			reflect.ValueOf(n).MethodByName(m.Name).Call(in)
+			in := []reflect.Value{reflect.ValueOf(c)}
+			m := reflect.ValueOf(n).MethodByName(act.Name)
+			args := GetFuncArgs(m.Type())
+			if len(args) == 2 {
+				obj := reflect.New(args[1].Elem()).Interface()
+				if err := json.NewDecoder(c.Body).Decode(obj); err != nil {
+					log.Println(err)
+				}
+				defer c.Body.Close()
+				in = append(in, reflect.ValueOf(obj))
+			}
+			m.Call(in)
 			return c.Handled
 		}
 	}
 	return false
 }
+
 func (p *Router) findActions(c *Ctx) (actions []string) {
 	method := strings.ToLower(c.Req.Method)
 	jBreakMethod := c.Req.Header.Get("jBreak-Method")
