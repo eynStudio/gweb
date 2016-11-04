@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"strings"
 
+	http2 "github.com/eynstudio/gobreak/net/http"
+
 	. "github.com/eynstudio/gobreak"
 	"github.com/eynstudio/gobreak/di"
 )
@@ -110,3 +112,5 @@ func (p *Ctx) UserId() GUID {
 	p.Uid = GUID(uid)
 	return p.Uid
 }
+
+func (p *Ctx) ReqIp() string { return http2.GetReqIp(p.Request) }
