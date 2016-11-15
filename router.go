@@ -62,30 +62,34 @@ func (p *Router) autoHandle(n INode, c *Ctx) bool {
 
 func (p *Router) findActions(c *Ctx) (actions []string) {
 	method := strings.ToLower(c.Req.Method)
-	jBreakMethod := c.Req.Header.Get("jBreak-Method")
+	jBreakMethod := c.Req.Header.Get("jbMethod")
 	if jBreakMethod != "" {
 		jBreakMethod = strings.ToLower(jBreakMethod)
 	}
 
 	hasId := c.Scope.HasKey("id")
-	appendActions := func(act string) {
+	hasId1 := c.Scope.HasKey("id1")
+	appendActions := func(res string) {
 		if jBreakMethod != "" {
-			actions = append(actions, method+act+jBreakMethod)
+			actions = append(actions, method+res+jBreakMethod)
+		}
+		if hasId1 {
+			actions = append(actions, method+res+"id1")
 		}
 		if hasId {
-			actions = append(actions, method+act+"id")
+			actions = append(actions, method+res+"id")
 		}
-		actions = append(actions, method+act)
+		actions = append(actions, method+res)
 	}
 
-	if c.Scope.HasKeys("act", "act1") {
-		appendActions(strings.ToLower(c.Get("act") + c.Get("act1")))
+	if c.Scope.HasKeys("res1", "res2") {
+		appendActions(strings.ToLower(c.Get("res1") + c.Get("res2")))
 	}
-	if c.Scope.HasKey("act1") {
-		appendActions(strings.ToLower(c.Get("act1")))
+	if c.Scope.HasKey("res2") {
+		appendActions(strings.ToLower(c.Get("res2")))
 	}
-	if c.Scope.HasKey("act") {
-		appendActions(c.Get("act"))
+	if c.Scope.HasKey("res1") {
+		appendActions(c.Get("res1"))
 	}
 	appendActions("")
 	return
