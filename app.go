@@ -21,7 +21,8 @@ type App struct {
 	di.Container
 	Name string
 	*Cfg
-	Server *http.Server
+	ServHttp  *http.Server
+	ServHttps *http.Server
 	*Router
 	*Tmpl
 	Sessions ISessions
@@ -50,11 +51,21 @@ func NewAppWithCfg(c *Cfg) *App {
 	if c.UseTmpl {
 		app.Tmpl.Load()
 	}
-	app.Server = &http.Server{
-		Addr:         fmt.Sprintf(":%d", c.Port),
-		Handler:      http.HandlerFunc(app.handler),
-		ReadTimeout:  time.Minute,
-		WriteTimeout: time.Minute,
+	if c.Http {
+		app.ServHttp = &http.Server{
+			Addr:         fmt.Sprintf(":%d", c.HttpPort),
+			Handler:      http.HandlerFunc(app.handler),
+			ReadTimeout:  time.Minute,
+			WriteTimeout: time.Minute,
+		}
+	}
+	if c.Https {
+		app.ServHttps = &http.Server{
+			Addr:         fmt.Sprintf(":%d", c.HttpsPort),
+			Handler:      http.HandlerFunc(app.handler),
+			ReadTimeout:  time.Minute,
+			WriteTimeout: time.Minute,
+		}
 	}
 	app.Map(c)
 	return app
@@ -63,13 +74,17 @@ func NewAppWithCfg(c *Cfg) *App {
 func (p *App) Start() {
 	p.injectNodes(p.Root)
 
-	if p.Cfg.Tls {
-		err := p.Server.ListenAndServeTLS(p.Cfg.CertFile, p.Cfg.KeyFile)
-		if err != nil {
-			panic(err)
-		}
-	} else {
-		err := p.Server.ListenAndServe()
+	if p.Cfg.Https {
+		go func() {
+			err := p.ServHttps.ListenAndServeTLS(p.Cfg.CertFile, p.Cfg.KeyFile)
+			if err != nil {
+				panic(err)
+			}
+		}()
+	}
+
+	if p.Cfg.Http {
+		err := p.ServHttp.ListenAndServe()
 		if err != nil {
 			panic(err)
 		}

@@ -1,8 +1,10 @@
 package gweb
 
 type Cfg struct {
-	Port       int
-	Tls        bool
+	Http       bool
+	HttpPort   int
+	Https      bool
+	HttpsPort  int
 	CertFile   string
 	KeyFile    string
 	ServeFiles []string
