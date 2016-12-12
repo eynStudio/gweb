@@ -27,7 +27,7 @@ type App struct {
 	*Tmpl
 	Sessions ISessions
 	*Log
-	ValidAuth      func(*Ctx) IStatus
+	ValidAuth      func(*Ctx) (httpStatus int, stauts IStatus)
 	NotFoundHandle func(*Ctx)
 }
 

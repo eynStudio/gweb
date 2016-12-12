@@ -34,6 +34,21 @@ func (p *Ctx) Error(code int) *Ctx {
 	return p
 }
 
+func (p *Ctx) ErrorJson(code int, m T) *Ctx {
+	p.WriteHeader(code)
+	p.isErr = true
+	if m == nil {
+		return p
+	}
+	if b, err := json.Marshal(m); err != nil {
+		p.Error(http.StatusInternalServerError)
+	} else {
+		p.Resp.Header().Set("Content-Type", "application/json; charset=utf-8")
+		p.Resp.Write(b)
+	}
+	return p
+}
+
 func (p *Ctx) Set(k string, v T)   { p.Scope[k] = v }
 func (p *Ctx) IsErr() bool         { return p.isErr }
 func (p *Ctx) Get(k string) string { return p.Scope.GetStr(k) }
