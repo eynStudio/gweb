@@ -48,7 +48,7 @@ func (p *Ctx) OK()                 { p.WriteHeader(http.StatusOK) }
 func (p *Ctx) NotFound()           { p.Error(http.StatusNotFound) }
 func (p *Ctx) Forbidden()          { p.Error(http.StatusForbidden) }
 func (p *Ctx) Redirect(url string) { http.Redirect(p.Resp, p.Request, url, http.StatusFound) }
-func (p *Ctx) HandleStatusJson(s Status) {
+func (p *Ctx) HandleStatusJson(s IStatus) {
 	p.Json(s)
 	p.Handled = true
 }
