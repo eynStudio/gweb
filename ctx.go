@@ -35,8 +35,11 @@ func (p *Ctx) Error(code int) *Ctx {
 }
 
 func (p *Ctx) ErrorJson(code int, m T) *Ctx {
-	p.WriteHeader(code)
-	p.isErr = true
+	p.Handled = true
+	if code != http.StatusOK {
+		p.WriteHeader(code)
+		p.isErr = true
+	}
 	if m == nil {
 		return p
 	}
@@ -68,9 +71,9 @@ func (p *Ctx) HandleStatusJson(s IStatus) {
 	p.Handled = true
 }
 
-func (p *Ctx) Json(m T) {
+func (p *Ctx) Json(m T) *Ctx {
 	if p.IsErr() {
-		return
+		return p
 	}
 	if b, err := json.Marshal(m); err != nil {
 		p.Error(http.StatusInternalServerError)
@@ -78,6 +81,7 @@ func (p *Ctx) Json(m T) {
 		p.Resp.Header().Set("Content-Type", "application/json; charset=utf-8")
 		p.Resp.Write(b)
 	}
+	return p
 }
 
 func (p *Ctx) Text(str string) {
