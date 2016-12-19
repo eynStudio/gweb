@@ -55,6 +55,7 @@ func (p *Ctx) ErrorJson(code int, m T) *Ctx {
 func (p *Ctx) Set(k string, v T)   { p.Scope[k] = v }
 func (p *Ctx) IsErr() bool         { return p.isErr }
 func (p *Ctx) Get(k string) string { return p.Scope.GetStr(k) }
+func (p *Ctx) GetId() GUID         { return p.Scope.GetGuid("id") }
 
 func (p *Ctx) IsGET() bool  { return p.Method == GET }
 func (p *Ctx) IsPOST() bool { return p.Method == POST }
