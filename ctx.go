@@ -25,7 +25,7 @@ type Ctx struct {
 	isErr   bool
 	afters  []Handler
 	Handled bool
-	Uid     GUID
+	uid     GUID
 }
 
 func (p *Ctx) Error(code int) *Ctx {
@@ -117,19 +117,21 @@ func (p *Ctx) ServeFile() bool {
 }
 
 func (p Ctx) IsAuth() bool {
-	return !p.Uid.IsEmpty()
+	return !p.uid.IsEmpty()
 }
 
-func (p *Ctx) UserId() GUID {
+func (p *Ctx) Uid() GUID {
 	if !p.HasToken() {
 		return GUID("")
 	}
-	if p.Uid != "" {
-		return p.Uid
+	if p.uid != "" {
+		return p.uid
 	}
 	uid, _ := p.Sessions.GetSessUid(p.Token)
-	p.Uid = GUID(uid)
-	return p.Uid
+	p.uid = GUID(uid)
+	return p.uid
 }
-
+func (p *Ctx) SetUid(uid GUID) {
+	p.uid = uid
+}
 func (p *Ctx) ReqIp() string { return http2.GetReqIp(p.Request) }
