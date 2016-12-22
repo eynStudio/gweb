@@ -97,11 +97,13 @@ func (p *Router) findActions(c *Ctx) (actions []string) {
 func (p *Router) RouteSubNodes(n INode, c *Ctx) {
 	for _, it := range n.GetNodes() {
 		if it.CanRoute(c.NextPart().path, c) {
-			if it.NeedAuth() {
-				if hc, s := c.ValidAuth(c); s == nil || s.IsErr() {
+			if it.NeedAuth() && !c.IsAuth() {
+				hc, s, uid := c.ValidAuth(c)
+				if s == nil || s.IsErr() {
 					c.ErrorJson(hc, s)
 					break
 				}
+				c.SetUid(uid)
 			}
 			c.moveNextPart()
 			p.Route(it, c)
