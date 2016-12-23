@@ -10,6 +10,7 @@ import (
 	. "github.com/eynstudio/gobreak"
 	"github.com/eynstudio/gobreak/conf"
 	"github.com/eynstudio/gobreak/di"
+	di2 "github.com/eynstudio/gox/di"
 )
 
 func init() {
@@ -92,6 +93,7 @@ func (p *App) Start() {
 }
 
 func (p *App) injectNodes(n INode) {
+	di2.Reg(n)
 	p.Apply(n)
 	nodes := n.GetNodes()
 	for i, l := 0, len(nodes); i < l; i++ {
