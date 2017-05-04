@@ -102,6 +102,14 @@ func (p *Ctx) Tmpl(tpl string, o T) {
 	}
 }
 
+func (p *Ctx) Tmpl2(tpl string, o T) {
+	p.Resp.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := p.App.Tmpl.Execute2(p.Resp, tpl+".html", o); err != nil {
+		log.Println(err)
+		p.Error(http.StatusInternalServerError)
+	}
+}
+
 func (p *Ctx) ServeFile() bool {
 	url := p.Url()
 	for _, path := range p.Cfg.ServeFiles {

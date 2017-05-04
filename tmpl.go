@@ -20,3 +20,7 @@ func (p *Tmpl) Load() {
 func (p *Tmpl) Execute(wr io.Writer, name string, data interface{}) error {
 	return p.Templates.ExecuteTemplate(wr, name+".tpl", data)
 }
+
+func (p *Tmpl) Execute2(wr io.Writer, name string, data interface{}) error {
+	return p.Templates.ExecuteTemplate(wr, name, data)
+}
