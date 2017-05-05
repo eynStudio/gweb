@@ -14,7 +14,9 @@ func html(v string) template.HTML { return template.HTML(v) }
 func (p *Tmpl) Load() {
 	p.Templates = template.Must(template.New("").Funcs(template.FuncMap{
 		"html": html,
-	}).Delims("[[", "]]").ParseGlob("views/*.*"))
+	}).Delims("[[", "]]").ParseGlob("views/layout/*.*"))
+
+	p.Templates = template.Must(p.Templates.ParseGlob("views/*.*"))
 }
 
 func (p *Tmpl) Execute(wr io.Writer, name string, data interface{}) error {
