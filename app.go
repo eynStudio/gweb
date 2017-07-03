@@ -114,6 +114,10 @@ func (p *App) NewCtx(r *http.Request, rw http.ResponseWriter) *Ctx {
 
 func (p *App) handler(w http.ResponseWriter, r *http.Request) {
 	ctx := p.NewCtx(r, w)
+	ctx.Resp.Header().Set("Access-Control-Allow-Origin", "*")
+	ctx.Resp.Header().Set("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS")
+	ctx.Resp.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization")
+
 	if !ctx.ServeFile() {
 		p.Route(p.Root, ctx)
 		if !ctx.Handled {
