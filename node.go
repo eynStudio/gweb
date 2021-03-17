@@ -17,10 +17,10 @@ type INode interface {
 	RunInterceptors(c *Ctx) INode
 	GetNodes() []INode
 	NeedAuth() bool
-	Actions() map[string]nodeAction
+	Actions() map[string]NodeAction
 }
 
-type nodeAction struct {
+type NodeAction struct {
 	Name string
 	Type reflect.Type
 }
@@ -30,7 +30,7 @@ type Node struct {
 	Interceptors []*Interceptor
 	Nodes        []INode
 	needAuth     bool
-	actions      map[string]nodeAction
+	actions      map[string]NodeAction
 }
 
 func NewNode(path string, auth bool) (pn *Node) {
@@ -55,7 +55,7 @@ func newNode(path string, auth bool) *Node {
 		Interceptors: []*Interceptor{},
 		Nodes:        []INode{},
 		needAuth:     auth,
-		actions:      make(map[string]nodeAction),
+		actions:      make(map[string]NodeAction),
 	}
 }
 
@@ -84,7 +84,7 @@ func (p *Node) CheckHttpMethod(n INode) {
 	for i, j := 0, nodeType.NumMethod(); i < j; i++ {
 		m := nodeType.Method(i)
 		if isHttpMethod(m) {
-			p.actions[strings.ToLower(m.Name)] = nodeAction{m.Name, m.Type}
+			p.actions[strings.ToLower(m.Name)] = NodeAction{m.Name, m.Type}
 		}
 	}
 }
@@ -96,7 +96,7 @@ func (p *Node) addNode(n INode) INode {
 
 func (p *Node) Handle(c *Ctx) {}
 
-func (p *Node) Actions() map[string]nodeAction { return p.actions }
+func (p *Node) Actions() map[string]NodeAction { return p.actions }
 
 func (p *Node) GetNodes() []INode                 { return p.Nodes }
 func (p *Node) NeedAuth() bool                    { return p.needAuth }
